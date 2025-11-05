@@ -26,7 +26,7 @@ resource "aws_s3_bucket" "app" {
 resource "aws_s3_bucket_ownership_controls" "app" {
   bucket = aws_s3_bucket.app.id
   rule {
-    object_ownership = "ObjectWriter"
+    object_ownership = "BucketOwnerPreferred"
   }
 }
 
@@ -62,6 +62,9 @@ resource "aws_s3_bucket_website_configuration" "app" {
 }
 
 resource "aws_s3_object" "app" {
+  depends_on = [
+    aws_s3_bucket_acl.app
+  ]
   acl          = "public-read"
   key          = "index.html"
   bucket       = aws_s3_bucket.app.id
